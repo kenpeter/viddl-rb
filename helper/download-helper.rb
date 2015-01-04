@@ -22,12 +22,13 @@ module ViddlRb
     # given a download url and a full file save path.
     TOOLS_PRIORITY_LIST = [
 
-      Tool.new(:aria2c) do |url, path|
-        "aria2c #{url.inspect} -U 'Wget/1.8.1' -x4 -d #{File.dirname(path).inspect} -o #{File.basename(path).inspect}"
+			# Gary, wget goes first before aria2c for testing
+			Tool.new(:wget) do |url, path|
+        "wget -c #{url.inspect} -O #{path.inspect}"
       end,
 
-      Tool.new(:wget) do |url, path|
-        "wget -c #{url.inspect} -O #{path.inspect}"
+      Tool.new(:aria2c) do |url, path|
+        "aria2c #{url.inspect} -U 'Wget/1.8.1' -x4 -d #{File.dirname(path).inspect} -o #{File.basename(path).inspect}"
       end,
 
       Tool.new(:curl) do |url, path|
@@ -42,6 +43,9 @@ module ViddlRb
       default_opts = {:save_dir => ".",
                       :amount_of_retries => 6,
                       :tool => get_default_tool}
+
+			# Gary
+			#byebug
 
       if user_tool = user_opts[:tool]
         user_opts[:tool] = TOOLS_PRIORITY_LIST.find { |tool| tool.name == user_tool } unless user_tool == :"net-http"

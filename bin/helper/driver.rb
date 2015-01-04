@@ -1,4 +1,3 @@
-
 # The Driver class drives the application logic in the viddl-rb utility.
 # It gets the correct plugin for the given url and passes a download queue
 # (that it gets from the plugin) to the Downloader object which downloads the videos.
@@ -13,10 +12,11 @@ class Driver
   def start
     queue = get_download_queue
 
+		# Gary
     if @params[:url_only]
-      queue.each { |url_name| puts url_name[:url] }
+      queue.each { |url_name| puts url_name[0][:url] }
     elsif @params[:title_only]
-      queue.each { |url_name| puts url_name[:name] }
+      queue.each { |url_name| puts url_name[0][:name] }
     else
       @downloader.download(queue, @params)
     end
@@ -26,15 +26,29 @@ class Driver
 
   #finds the right plugins and returns the download queue.
   def get_download_queue
-    url = @params[:url]
-    plugin = ViddlRb::PluginBase.registered_plugins.find { |p| p.matches_provider?(url) }
-    raise "ERROR: No plugin seems to feel responsible for this URL." unless plugin
-    puts "Using plugin: #{plugin}"
+		return_plugins = Array.new	
+    urls = @params[:urls]
+		plugins = Array.new
+
+		urls.each { |url| 
+			plugins.push(
+				ViddlRb::PluginBase.registered_plugins.find { |p| p.matches_provider?(url) } 
+			)	 
+		}
+
+    #plugin = ViddlRb::PluginBase.registered_plugins.find { |p| p.matches_provider?(url) }
+    raise "ERROR: No plugin seems to feel responsible for this URL." unless plugins
+    puts "Using plugin: #{plugins}"
 
     begin
-      #we'll end up with an array of hashes with they keys :url and :name 
-      plugin.get_urls_and_filenames(url, @params)
-      
+      #we'll end up with an array of hashes with they keys :url and :name
+			# http://stackoverflow.com/questions/10165469/looping-through-the-index-of-an-array
+			plugins.each_with_index do  |plugin, key|
+				urls_and_filenames = plugin.get_urls_and_filenames(urls[key], @params)
+      	return_plugins.push( urls_and_filenames )
+			end      
+	
+			return_plugins
     rescue ViddlRb::PluginBase::CouldNotDownloadVideoError => e
       raise "CouldNotDownloadVideoError.\n" +
             "Reason: #{e.message}"

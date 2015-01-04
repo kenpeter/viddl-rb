@@ -4,6 +4,9 @@ class Downloader
 
   def download(download_queue, params)
     download_queue.each do |url_name|
+			# Gary url_name is hash inside array, so pick the first element
+			url_name = url_name[0]
+
       # Skip invalid invalid link
       next unless url_name
 
@@ -15,6 +18,7 @@ class Downloader
                                                  name,
                                                  :save_dir => params[:save_dir],
                                                  :tool => params[:tool] && params[:tool].to_sym
+
       if result
         puts "Download for #{name} successful."
         url_name[:on_downloaded].call(true) if url_name[:on_downloaded]

@@ -57,6 +57,9 @@ class Vimeo < PluginBase
 
 
     string.scan(re).flatten.compact.select{|s| s.include? "vimeocdn.com"}.first
+
+		# Gary
+		binding.pry
   end
 
 end

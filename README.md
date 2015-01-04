@@ -1,7 +1,4 @@
 __viddl-rb:__
-
-Test only
-
 Initially created by Marc Seeger ([@rb2k](github.com/rb2k))
 
 Repo: http://github.com/rb2k/viddl-rb

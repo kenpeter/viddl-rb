@@ -11,6 +11,9 @@ class DecipherCoordinator
     Youtube.notify "Cipher guess: no"
     {version: cipher_version, operations: ops.join(" "), guess?: false}
 
+		# Gary
+    #binding.pry
+
   rescue Decipherer::UnknownCipherVersionError => e
     ops = @cipher_guesser.guess(cipher_version)
     Youtube.notify "Cipher guess: yes"

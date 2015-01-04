@@ -17,6 +17,10 @@ class VideoResolver
     decipher_signatures!(url_data, decipher_data)
 
     Video.new(get_title, url_data, decipher_data)
+
+		# Gary
+    #binding.pry
+	
   end
 
   private
@@ -52,11 +56,17 @@ class VideoResolver
   def parse_stream_map(stream_map)
     entries = stream_map.split(",")
     entries.map { |entry| parse_stream_map_entry(entry) }
+
+		# Gary
+    #binding.pry
   end
 
   def parse_stream_map_entry(entry)
     # Note: CGI.parse puts each value in an array.
     params = CGI.parse((entry))
+
+		# Gary
+    #binding.pry
 
     {
       itag: params["itag"].first,

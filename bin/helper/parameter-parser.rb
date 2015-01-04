@@ -99,12 +99,17 @@ class ParameterParser
     # exit if no video url
     print_help_and_exit(optparse) if args.empty?
     # the url is the only element left
-    url = args.first
+    #url = args.first
+
+		tmp_urls = self.add_protocol!(args)
+		urls = self.start_with_protocol(tmp_urls)
+	
     # Seems like some users like to pass non protocol prefixed URIs
-    url = "http://#{url}" unless url.start_with?('http')
+    #url = "http://#{url}" unless url.start_with?('http')
+
     # raise exception if invalid url
-    validate_url!(url)
-    options[:url] = url
+    #validate_url!(url)
+    options[:urls] = urls
     options
   end
 
@@ -125,6 +130,39 @@ class ParameterParser
       raise OptionParser::InvalidArgument.new("#{quality} is not a valid argument.")
     end
   end
+
+	# Gary
+	def self.start_with_protocol(args)
+		the_return = Array.new 
+
+		args.each do |arg|
+			if arg.match(/^http/)
+				the_return.push(arg)		
+			else
+				# continue
+			end
+		end
+
+		the_return
+	end
+
+	# Gary
+	def self.add_protocol!(urls)
+		the_return = Array.new
+
+		urls.each do |url|
+			if url.start_with?('http')
+				tmp_url = url
+			else
+				tmp_url = "http://#{url}"
+			end
+		
+			the_return.push(tmp_url)
+		end
+
+		the_return	
+	end
+
 end
 
 

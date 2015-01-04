@@ -26,9 +26,10 @@ begin
   puts "Plugins loaded: #{ViddlRb::PluginBase.registered_plugins.inspect}"
 
   puts "Will try to extract audio: #{params[:extract_audio] == true}."
-  puts "Analyzing URL: #{params[:url]}"
+  puts "Analyzing URL: #{params[:urls]}"
 
-  driver = Driver.new(params)   
+  driver = Driver.new(params)  
+
   driver.start                  # starts the download process
 
 rescue OptionParser::ParseError, ViddlRb::RequirementError => e
